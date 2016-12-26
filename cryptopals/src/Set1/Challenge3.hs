@@ -36,10 +36,14 @@ score str =
   let freq = normalize $ fmap (\c -> (c, fromIntegral $ C.count c $ C.map toLower str)) ['a'..'z']
   in  dist freq englishFreqs
 
-allDecodings :: [C.ByteString]
-allDecodings = fmap (\k -> decode k encoded) hexKeys
+allDecodings :: C.ByteString -> [C.ByteString]
+allDecodings secret = fmap (\k -> decode k secret) hexKeys
 
-topDecodings :: Int -> [C.ByteString]
-topDecodings k =
-  let messages = fmap hex2c allDecodings
+topDecodings :: C.ByteString -> Int -> [C.ByteString]
+topDecodings secret k =
+  let messages = fmap hex2c $ allDecodings secret
   in  take k $ sortWith score messages
+
+solution = do
+  putStrLn "Top 5 decodings for Set 1, Challenge 3:"
+  C.putStrLn $ C.unlines $ topDecodings encoded 5

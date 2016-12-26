@@ -1,13 +1,13 @@
 name:                cryptopals
 version:             0.1.0.0
-synopsis:            Initial project template from stack
+synopsis:            Haskell solutions to the Cryptopals with unit and property-based tests
 description:         Please see README.md
-homepage:            https://github.com/githubuser/cryptopals#readme
-license:             BSD3
+homepage:            https://github.com/palmerlao/turbo-meme/tree/master/cryptopals
+license:             GPL-2
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2016 Author name here
+author:              Palmer Lao
+maintainer:          palmer.lao@gmail.com
+copyright:           Palmer Lao
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
@@ -15,7 +15,11 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src, test
-  exposed-modules:     Lib, Set1.Challenge1, Set1.Challenge2, Set1.Challenge3
+  exposed-modules:     Lib
+                     , Set1.Challenge1
+                     , Set1.Challenge2
+                     , Set1.Challenge3
+                     , Set1.Challenge4
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , containers
@@ -49,4 +53,4 @@ test-suite cryptopals-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/cryptopals
+  location: https://github.com/palmerlao/turbo-meme/tree/master/cryptopals
