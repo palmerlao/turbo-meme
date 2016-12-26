@@ -1,11 +1,4 @@
-module Set1.Challenge1 (
-  int2hex,
-  hex2int,
-  hexSyms,
-  base2bin,
-  bin2base,
-  hex2base64
-  ) where
+module Set1.Challenge1 where
 
 import Data.Bits
 import qualified Data.ByteString as BS

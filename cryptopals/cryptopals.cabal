@@ -32,7 +32,8 @@ executable cryptopals-exe
 test-suite cryptopals-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
-  other-modules:     Set1.Tests
+  other-modules:       Set1.Challenge1.Tests
+                     , Set1.Challenge2.Tests
   main-is:             Spec.hs
   build-depends:       base
                      , cryptopals

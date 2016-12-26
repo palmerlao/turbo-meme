@@ -1,5 +1,4 @@
-module Set1.Challenge3 (
-  ) where
+module Set1.Challenge3 where
 
 import qualified Data.ByteString.Char8 as C
 import Data.Char (chr, toLower)
@@ -44,5 +43,3 @@ topDecodings :: Int -> [C.ByteString]
 topDecodings k =
   let messages = fmap hex2c allDecodings
   in  take k $ sortWith score messages
-
-       

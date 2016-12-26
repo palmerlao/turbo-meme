@@ -1,6 +1,4 @@
-module Set1.Challenge2 (
-  fixedXor
-  ) where
+module Set1.Challenge2 where
 
 import Data.Bits (xor)
 import qualified Data.ByteString.Char8 as C
