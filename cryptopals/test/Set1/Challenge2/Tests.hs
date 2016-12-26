@@ -4,6 +4,8 @@ import qualified Data.ByteString.Char8 as C
 
 import Test.Tasty
 import Test.Tasty.HUnit
+import Test.Tasty.QuickCheck
+import Test.QuickCheck
 
 import Set1.Challenge2
 

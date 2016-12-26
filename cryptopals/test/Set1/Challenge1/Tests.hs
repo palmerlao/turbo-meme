@@ -1,6 +1,4 @@
-module Set1.Challenge1.Tests where
-
-import Control.Applicative ((<*>))
+module Set1.Challenge1.Tests (c1Tree) where
 
 import qualified Data.ByteString.Char8 as C
 
@@ -8,9 +6,11 @@ import Test.Tasty
 import Test.Tasty.HUnit
 import Test.Tasty.QuickCheck
 import Test.QuickCheck
-import Test.QuickCheck.Modifiers
 
 import Set1.Challenge1
+
+c1Tree :: TestTree
+c1Tree = testGroup "Challenge 1" [challenge1Unit, challenge1Props]
 
 challenge1Unit :: TestTree
 challenge1Unit = testGroup "Challenge 1 unit tests" [
@@ -22,10 +22,10 @@ challenge1 =
   @=?
   (hex2base64 . C.pack $ "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
 
-challenge1QC :: TestTree
-challenge1QC = testGroup "Challenge 1 properties" [
-  testProperty "bin2base . base2bin is id" prop_id1,
-  testProperty "base2bin . bin2base is id" prop_id2
+challenge1Props :: TestTree
+challenge1Props = testGroup "Challenge 1 properties" [
+  testProperty "bin2base . base2bin == id" prop_id1,
+  testProperty "base2bin . bin2base == id" prop_id2
   ]
 
 genBitsSyms :: Gen (Int, String)

@@ -8,14 +8,4 @@ main = defaultMain tests
 
 tests :: TestTree
 tests = testGroup "Tests" [
-  unitTests,
-  properties]
-
-unitTests :: TestTree
-unitTests = testGroup "Unit tests" [
-  challenge1Unit,
-  challenge2Unit]
-
-properties :: TestTree
-properties = testGroup "Properties" [
-  challenge1QC]
+  c1Tree]
