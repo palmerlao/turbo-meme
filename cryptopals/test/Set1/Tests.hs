@@ -7,7 +7,9 @@ module Set1.Tests (
 import Test.HUnit
 import qualified Data.ByteString.Char8 as C
 
-import Set1 (hex2base64, fixedXor)
+import Set1.Challenge1
+import Set1.Challenge2
+
 
 challenge1 :: Assertion
 challenge1 = assertEqual "hex2base64 example"

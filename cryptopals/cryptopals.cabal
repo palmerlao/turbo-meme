@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src, test
-  exposed-modules:     Lib, Set1
+  exposed-modules:     Lib, Set1.Challenge1, Set1.Challenge2, Set1.Challenge3
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , containers
