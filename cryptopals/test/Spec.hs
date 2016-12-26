@@ -8,4 +8,5 @@ main = defaultMain tests
 
 tests :: TestTree
 tests = testGroup "Tests" [
-  c1Tree]
+  c1Tree,
+  c2Tree]

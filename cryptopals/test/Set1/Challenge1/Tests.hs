@@ -40,6 +40,7 @@ gen1 = do
   i <- arbitrarySizedNatural
   return (bits, syms, i)
 
+-- drops leading zeros
 gen2 :: Gen (Int, String, C.ByteString)
 gen2 = do
   (bits, syms) <- genBitsSyms
