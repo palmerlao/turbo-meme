@@ -10,7 +10,6 @@ import Set1.Challenge1
 import Set1.Challenge2
 
 -- challenge3: decode a hex string that was xor'd with one character
-hex2c = (bin2base 8 $ fmap chr [0..255]) .  (base2bin 4 hexSyms)
 encoded = C.pack "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 intEncoded = hex2int encoded
 hexKeys = [ C.pack [x,y] | x <- hexSyms, y <- hexSyms ]

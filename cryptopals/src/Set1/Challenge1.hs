@@ -3,6 +3,7 @@ module Set1.Challenge1 where
 import Data.Bits
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as C
+import Data.Char (chr)
 import Data.Map (fromList, (!))
 
 -- challenge 1: convert hex to base64
@@ -28,3 +29,5 @@ int2hex = bin2base 4 hexSyms
 
 hex2int = base2bin 4 hexSyms
 hex2base64 = int2base64 . hex2int
+hex2c = (bin2base 8 $ fmap chr [0..255]) .  (base2bin 4 hexSyms)
+c2hex = (bin2base 4 hexSyms) . (base2bin 8 $ fmap chr [0..255])
