@@ -36,7 +36,7 @@ solution = do
 
 {-
 solution = do
-  secretsFile <- openFile "data/4.txt" ReadMode
+  secretsFile <- openFile "data/Set1/4.txt" ReadMode
   secrets <- fmap C.lines $ C.hGetContents $ secretsFile
   putStrLn $ "Top scoring decodes for Set 1, Challenge 4:"
   C.putStrLn $ C.unlines $ findEncoded secrets

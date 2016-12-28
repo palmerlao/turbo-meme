@@ -21,6 +21,7 @@ library
                      , Set1.Challenge3
                      , Set1.Challenge4
                      , Set1.Challenge5
+                     , Set1.Challenge6
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , containers
@@ -40,7 +41,8 @@ test-suite cryptopals-test
   hs-source-dirs:      test
   other-modules:       Set1.Challenge1.Tests
                      , Set1.Challenge2.Tests
-                     , Set1.Challenge5.Tests                     
+                     , Set1.Challenge5.Tests
+                     , Set1.Challenge6.Tests                     
   main-is:             Spec.hs
   build-depends:       base
                      , cryptopals
