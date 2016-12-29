@@ -16,15 +16,31 @@ c1Tree = testGroup "Challenge 1" [challenge1Unit, challenge1Props]
 
 challenge1Unit :: TestTree
 challenge1Unit = testGroup "Challenge 1 unit tests" [
-  testCase "Cryptopals example" challenge1
+  testCase "Cryptopals example" challenge1,
+  testCase "base642c TQ== is M" mExample,
+  testCase "base642c TWE= is Ma" maExample,
+  testCase "base642c TWFu is Man" manExample
   ]
-
 
 challenge1 :: Assertion
 challenge1 = 
   (C.pack "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t")
   @=?
   (hex2base64 . C.pack $ "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
+
+mExample :: Assertion
+mExample =
+  (C.pack "M") @=? (base642c $ C.pack "TQ==")
+
+maExample :: Assertion
+maExample =
+  (C.pack "Ma") @=? (base642c $ C.pack "TWE=")
+
+manExample :: Assertion
+manExample =
+  (C.pack "Man") @=? (base642c $ C.pack "TWFu")
+
+
 
 challenge1Props :: TestTree
 challenge1Props = testGroup "Challenge 1 properties" [
@@ -46,7 +62,7 @@ prop_chunk =
   forAll
   chunkGens
   (\(sz, str) ->
-    let chunked = chunk sz '\0' str
+    let chunked = chunkAndPad sz '\0' str
     in  (C.length . C.concat $ chunked)
         ==
         (sz*(length chunked))
@@ -63,3 +79,5 @@ int2int = base642int . int2base64
 
 base2base :: Int -> String -> C.ByteString -> C.ByteString
 base2base bits syms = (bin2base bits syms) . (base2bin bits syms)
+
+base642c = int2c . base642int 

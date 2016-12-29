@@ -40,6 +40,7 @@ test-suite cryptopals-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   other-modules:       Set1.Challenge1.Tests
+                     , Set1.Challenge1.Gens
                      , Set1.Challenge2.Tests
                      , Set1.Challenge5.Tests
                      , Set1.Challenge6.Tests                     

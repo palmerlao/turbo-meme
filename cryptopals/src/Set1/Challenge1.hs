@@ -36,8 +36,8 @@ c2hex = (bin2base 4 hexSyms) . (base2bin 8 $ fmap chr [0..255])
 c2int = base2bin 8 $ fmap chr [0..255]
 int2c = bin2base 8 $ fmap chr [0..255]
 
-chunk :: Int -> Char -> C.ByteString -> [C.ByteString]
-chunk sz pad str =
+chunkAndPad :: Int -> Char -> C.ByteString -> [C.ByteString]
+chunkAndPad sz pad str =
   let chunkHelper str =
         case C.splitAt sz str of
           (h, t) | C.length h == sz -> Just (h, t)
@@ -45,10 +45,31 @@ chunk sz pad str =
           (h, t) -> Just (h `C.append` (C.replicate (sz - (C.length h)) pad), t)
   in  unfoldr chunkHelper str
 
+chunk :: Int -> C.ByteString -> [C.ByteString]
+chunk sz str =
+  let chunkHelper str =
+        case C.splitAt sz str of
+          (h, t) | C.length h == sz -> Just (h, t)
+          (h, t) | C.length h == 0 -> Nothing
+  in  unfoldr chunkHelper str
+
 int2base64 :: Integer -> C.ByteString
 int2base64 i = undefined
 
+paddedBase642int :: C.ByteString -> (Integer, Int)
+paddedBase642int str = 
+  let nBytes      = 3 - (C.count '=' str)
+      decoded     = base2bin 6 b64Syms $ C.map (\c -> if c=='=' then 'A' else c) str
+      shift       = 8*(3 - nBytes)
+  in  (decoded `shiftR` shift, 8*nBytes)
+
 base642int :: C.ByteString -> Integer
 base642int str =
-  let chunks = chunk 3 '=' str
-  in  undefined
+  let chunks = chunk 4 str
+      initNum =
+        sum $ zipWith
+        (\a b -> a * 64^b)
+        (fmap (base2bin 6 b64Syms) (init chunks))
+        [0..]
+      (lastNum, nBits) = paddedBase642int $ last chunks
+  in  (initNum `shiftL` nBits) + lastNum
