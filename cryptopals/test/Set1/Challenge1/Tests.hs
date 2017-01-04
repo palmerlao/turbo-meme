@@ -19,7 +19,13 @@ challenge1Unit = testGroup "Challenge 1 unit tests" [
   testCase "Cryptopals example" challenge1,
   testCase "base642c TQ== is M" mExample,
   testCase "base642c TWE= is Ma" maExample,
-  testCase "base642c TWFu is Man" manExample
+  testCase "base642c TWFu is Man" manExample,
+  testCase "c2base64 M is TQ==" mExample',
+  testCase "c2base64 Ma is TWE=" maExample',
+  testCase "c2base64 Man is TWFu" manExample',
+  testCase "pleasure. wiki example" pleasureExample,
+  testCase "leasure. wiki example" leasureExample,
+  testCase "easure. wiki example" easureExample
   ]
 
 challenge1 :: Assertion
@@ -39,8 +45,30 @@ maExample =
 manExample :: Assertion
 manExample =
   (C.pack "Man") @=? (base642c $ C.pack "TWFu")
+  
+mExample' :: Assertion
+mExample' =
+  (C.pack "TQ==") @=? (c2base64 $ C.pack "M")
 
+maExample' :: Assertion
+maExample' =
+  (C.pack "TWE=") @=? (c2base64 $ C.pack "Ma")
 
+manExample' :: Assertion
+manExample' =
+  (C.pack "TWFu") @=? (c2base64 $ C.pack "Man")
+
+pleasureExample :: Assertion
+pleasureExample =
+  (C.pack "cGxlYXN1cmUu") @=? (c2base64 $ C.pack "pleasure.")
+
+leasureExample :: Assertion
+leasureExample =
+  (C.pack "bGVhc3VyZS4=") @=? (c2base64 $ C.pack "leasure.")
+
+easureExample :: Assertion
+easureExample =
+  (C.pack "ZWFzdXJlLg==") @=? (c2base64 $ C.pack "easure.")
 
 challenge1Props :: TestTree
 challenge1Props = testGroup "Challenge 1 properties" [
@@ -72,12 +100,10 @@ bin2bin :: Int -> String -> Integer -> Integer
 bin2bin bits syms =  (base2bin bits syms) . (bin2base bits syms)
 
 base642base64 :: C.ByteString -> C.ByteString
-base642base64 = int2base64 . base642int
+base642base64 = int2Base64 . base642int
 
 int2int :: Integer -> Integer
-int2int = base642int . int2base64
+int2int = base642int . int2Base64
 
 base2base :: Int -> String -> C.ByteString -> C.ByteString
 base2base bits syms = (bin2base bits syms) . (base2bin bits syms)
-
-base642c = int2c . base642int 

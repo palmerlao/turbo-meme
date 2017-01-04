@@ -7,6 +7,8 @@ import Data.Char (chr)
 import Data.List (foldl', unfoldr)
 import Data.Map (fromList, (!))
 
+import Debug.Trace 
+
 -- challenge 1: convert hex to base64
 bin2base :: Int -> String -> Integer -> C.ByteString
 bin2base bits syms =
@@ -26,15 +28,18 @@ base2bin bits syms =
 b64Syms = ['A'..'Z'] ++ ['a'..'z'] ++ ['0'..'9'] ++ ['+', '/']
 hexSyms = ['0'..'9'] ++ ['a'..'f']
 
-int2hex = bin2base 4 hexSyms
+base642c = int2c . base642int
+
+c2base64 = int2Base64 . c2int 
+c2hex = (bin2base 4 hexSyms) . (base2bin 8 $ fmap chr [0..255])
+c2int = base2bin 8 $ fmap chr [0..255]
 
 hex2int = base2bin 4 hexSyms
-hex2base64 = int2base64 . hex2int
+hex2base64 = int2Base64 . hex2int
 hex2c = (bin2base 8 $ fmap chr [0..255]) .  (base2bin 4 hexSyms)
-c2hex = (bin2base 4 hexSyms) . (base2bin 8 $ fmap chr [0..255])
 
-c2int = base2bin 8 $ fmap chr [0..255]
 int2c = bin2base 8 $ fmap chr [0..255]
+int2hex = bin2base 4 hexSyms
 
 chunkAndPad :: Int -> Char -> C.ByteString -> [C.ByteString]
 chunkAndPad sz pad str =
@@ -53,8 +58,19 @@ chunk sz str =
           (h, t) | C.length h == 0 -> Nothing
   in  unfoldr chunkHelper str
 
-int2base64 :: Integer -> C.ByteString
-int2base64 i = undefined
+-- probably slightly slower than optimal
+numBytes :: Integer -> Int
+numBytes i =
+  let numBits = floor . logBase 2.0 . fromIntegral $ i
+  in  head $ filter (\k -> k*8 >= numBits) [0..]
+
+int2Base64 :: Integer -> C.ByteString
+int2Base64 i =
+  let nb = traceShowId $ numBytes i 
+      numPadBytes = traceShowId $ (3 - (nb `mod` 3)) `mod` 3
+      padded = i `shiftL` (8*numPadBytes)
+      decoded = traceShowId $ bin2base 6 b64Syms padded 
+  in  (C.take (C.length decoded-numPadBytes) decoded) `C.append` (C.replicate numPadBytes '=')
 
 paddedBase642int :: C.ByteString -> (Integer, Int)
 paddedBase642int str = 
