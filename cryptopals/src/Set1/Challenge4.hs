@@ -6,6 +6,7 @@ import GHC.Exts (sortWith)
 
 import System.IO (openFile, IOMode(ReadMode))
 
+import Set1.Challenge1 (Encoded, Hex, unwrap, hex)
 import Set1.Challenge3 (score, topDecodings)
 
 someLetters :: C.ByteString -> Bool
@@ -21,14 +22,14 @@ substr sub str = case C.breakSubstring sub str of
 
 -- combing through some preliminary results shows a string along the lines of
 -- nOWTHATTHEPARTYISJUMPING*
-findEncoded :: [C.ByteString] -> [C.ByteString]
+findEncoded :: [Encoded Hex] -> [C.ByteString]
 findEncoded strs =
-  fmap (\(a,b) -> a `C.append` (C.pack "\t") `C.append` b) $
+  fmap (\(a,b) -> (C.pack . show $ a) `C.append` (C.pack "\t") `C.append` b) $
   filter (\(e,d) -> substr (C.pack "PARTY") d)
   (concat $ fmap (\x -> (repeat x) `zip` (topDecodings x 10)) strs)
 
 -- which corresponds to this hex string in the file
-secret = C.pack "7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f"
+secret = hex $ C.pack "7b5a4215415d544115415d5015455447414c155c46155f4058455c5b523f"
 
 solution = do
   putStrLn "Top 5 decodings for Set 1, Challenge 4:"

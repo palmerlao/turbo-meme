@@ -2,6 +2,7 @@ module Set1.Challenge3 where
 
 import qualified Data.ByteString.Char8 as C
 import Data.Char (chr, toLower)
+import Data.Coerce (coerce)
 import Data.List (foldl')
 
 import GHC.Exts (sortWith)
@@ -10,13 +11,14 @@ import Set1.Challenge1
 import Set1.Challenge2
 
 -- challenge3: decode a hex string that was xor'd with one character
-encoded = C.pack "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+encoded = hex $ C.pack "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 intEncoded = hex2int encoded
-hexKeys = [ C.pack [x,y] | x <- hexSyms, y <- hexSyms ]
+hexKeys = [ hex $ C.pack [x,y] | x <- hexSyms, y <- hexSyms ]
 
-decode :: C.ByteString -> C.ByteString -> C.ByteString
+decode :: Encoded Hex -> Encoded Hex -> Encoded Hex
 decode key str =
-  let keyBuf = C.concat $ take ((C.length encoded) `div` (C.length key)) $ repeat key
+  let keyBuf :: Encoded Hex
+      keyBuf = hex $ C.concat . (fmap unwrap) $ take ((C.length . unwrap $ encoded) `div` (C.length . unwrap $ key)) $ repeat key
   in  fixedXor keyBuf str
 
 normalize :: [(Char, Double)] -> [(Char, Double)]
@@ -35,10 +37,10 @@ score str =
   let freq = normalize $ fmap (\c -> (c, fromIntegral $ C.count c $ C.map toLower str)) ['a'..'z']
   in  dist freq englishFreqs
 
-allDecodings :: C.ByteString -> [C.ByteString]
+allDecodings :: Encoded Hex -> [Encoded Hex]
 allDecodings secret = fmap (\k -> decode k secret) hexKeys
 
-topDecodings :: C.ByteString -> Int -> [C.ByteString]
+topDecodings :: Encoded Hex -> Int -> [C.ByteString]
 topDecodings secret k =
   let messages = fmap hex2c $ allDecodings secret
   in  take k $ sortWith score messages
