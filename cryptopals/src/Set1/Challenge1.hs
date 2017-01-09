@@ -2,25 +2,23 @@ module Set1.Challenge1 where
 
 import Data.Bits
 import qualified Data.ByteString.Char8 as C
-import Data.Char (chr)
+import Data.Char (chr, ord)
 import Data.List (foldl', unfoldr)
 import Data.Map (fromList, (!))
-
-import Debug.Trace
 
 import GHC.Exts (IsString)
 
 data Base64
 data Hex
 newtype Encoded a = Encoded {unwrap :: C.ByteString}
-                  deriving (Show)
+                  deriving (Show, Eq)
 
 checkValidChars :: C.ByteString -> [Char] -> Encoded a
 checkValidChars str cs = if C.all (`elem` cs) str
                          then Encoded str
                          else error $
                               "found invalid characters: " ++
-                              (C.unpack $ C.filter (not . (`elem` cs)) str)
+                              (show $ map ord (C.unpack $ C.filter (not . (`elem` cs)) str))
 
 base64 :: C.ByteString -> Encoded Base64
 base64 = (`checkValidChars` b64Syms)
@@ -63,16 +61,6 @@ c2base64 = int2base64 . c2int
 c2hex = int2hex . c2int
 hex2c = int2c .  hex2int
 
-
-chunkAndPad :: Int -> Char -> C.ByteString -> [C.ByteString]
-chunkAndPad sz pad str =
-  let chunkHelper str =
-        case C.splitAt sz str of
-          (h, t) | C.length h == sz -> Just (h, t)
-          (h, t) | C.length h == 0 -> Nothing
-          (h, t) -> Just (h `C.append` (C.replicate (sz - (C.length h)) pad), t)
-  in  unfoldr chunkHelper str
-
 chunk :: Int -> C.ByteString -> [C.ByteString]
 chunk sz str =
   let chunkHelper str =
@@ -89,10 +77,10 @@ numBytes i =
 
 int2base64 :: Integer -> Encoded Base64
 int2base64 i =
-  let nb = traceShowId $ numBytes i 
-      numPadBytes = traceShowId $ (3 - (nb `mod` 3)) `mod` 3
+  let nb = numBytes i 
+      numPadBytes = (3 - (nb `mod` 3)) `mod` 3
       padded = i `shiftL` (8*numPadBytes)
-      decoded = traceShowId $ bin2base 6 b64Syms padded 
+      decoded = bin2base 6 b64Syms padded 
   in  base64 $ (C.take (C.length decoded-numPadBytes) decoded) `C.append` (C.replicate numPadBytes '=')
 
 paddedBase642int :: C.ByteString -> (Integer, Int)

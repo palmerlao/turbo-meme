@@ -30,45 +30,45 @@ challenge1Unit = testGroup "Challenge 1 unit tests" [
 
 challenge1 :: Assertion
 challenge1 = 
-  (C.pack "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t")
+  (base64 $ C.pack "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t")
   @=?
-  (hex2base64 . C.pack $ "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
+  (hex2base64 . hex . C.pack $ "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
 
 mExample :: Assertion
 mExample =
-  (C.pack "M") @=? (base642c $ C.pack "TQ==")
+  (C.pack "M") @=? (base642c . base64 . C.pack $ "TQ==")
 
 maExample :: Assertion
 maExample =
-  (C.pack "Ma") @=? (base642c $ C.pack "TWE=")
+  (C.pack "Ma") @=? (base642c . base64 . C.pack $ "TWE=")
 
 manExample :: Assertion
 manExample =
-  (C.pack "Man") @=? (base642c $ C.pack "TWFu")
+  (C.pack "Man") @=? (base642c . base64 . C.pack $ "TWFu")
   
 mExample' :: Assertion
 mExample' =
-  (C.pack "TQ==") @=? (c2base64 $ C.pack "M")
+  (base64 . C.pack $ "TQ==") @=? (c2base64 $ C.pack "M")
 
 maExample' :: Assertion
 maExample' =
-  (C.pack "TWE=") @=? (c2base64 $ C.pack "Ma")
+  (base64 . C.pack $ "TWE=") @=? (c2base64 $ C.pack "Ma")
 
 manExample' :: Assertion
 manExample' =
-  (C.pack "TWFu") @=? (c2base64 $ C.pack "Man")
+  (base64 . C.pack $ "TWFu") @=? (c2base64 $ C.pack "Man")
 
 pleasureExample :: Assertion
 pleasureExample =
-  (C.pack "cGxlYXN1cmUu") @=? (c2base64 $ C.pack "pleasure.")
+  (base64 . C.pack $ "cGxlYXN1cmUu") @=? (c2base64 $ C.pack "pleasure.")
 
 leasureExample :: Assertion
 leasureExample =
-  (C.pack "bGVhc3VyZS4=") @=? (c2base64 $ C.pack "leasure.")
+  (base64 . C.pack $ "bGVhc3VyZS4=") @=? (c2base64 $ C.pack "leasure.")
 
 easureExample :: Assertion
 easureExample =
-  (C.pack "ZWFzdXJlLg==") @=? (c2base64 $ C.pack "easure.")
+  (base64 . C.pack $ "ZWFzdXJlLg==") @=? (c2base64 $ C.pack "easure.")
 
 challenge1Props :: TestTree
 challenge1Props = testGroup "Challenge 1 properties" [
@@ -100,10 +100,10 @@ bin2bin :: Int -> String -> Integer -> Integer
 bin2bin bits syms =  (base2bin bits syms) . (bin2base bits syms)
 
 base642base64 :: C.ByteString -> C.ByteString
-base642base64 = int2Base64 . base642int
+base642base64 = unwrap . int2base64 . base642int . base64
 
 int2int :: Integer -> Integer
-int2int = base642int . int2Base64
+int2int = base642int . int2base64
 
 base2base :: Int -> String -> C.ByteString -> C.ByteString
 base2base bits syms = (bin2base bits syms) . (base2bin bits syms)
